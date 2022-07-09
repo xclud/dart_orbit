@@ -13,4 +13,3 @@ class EarthCenteredInertial {
   /// Z Coordinate.
   final double z;
 }
-
