@@ -1,3 +1,5 @@
+import 'package:orbit/src/julian.dart';
+
 class KeplerianElements {
   const KeplerianElements({
     required this.epoch,
@@ -80,4 +82,15 @@ class KeplerianElements {
   final double argumentOfPeriapsis;
 
   final double drag;
+
+  double getMinutesPastEpoch(DateTime utc) {
+    int year = epoch ~/ 1000.0;
+    final doy = epoch - (year * 1000.0);
+
+    year += year > 57 ? 1900 : 2000;
+    final j = julian(year, doy);
+    final epch = toTime(j);
+
+    return utc.difference(epch).inMilliseconds / 60000.0;
+  }
 }
