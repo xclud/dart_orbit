@@ -1,6 +1,6 @@
 {
-    "name": "example",
-    "short_name": "example",
+    "name": "Satellite Tracker",
+    "short_name": "Satellite Tracker",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
