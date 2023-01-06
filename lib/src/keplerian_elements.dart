@@ -1,6 +1,8 @@
-import 'package:orbit/src/julian.dart';
+part of orbit;
 
+/// The Keplerian Elements.
 class KeplerianElements {
+  /// The constructor.
   const KeplerianElements({
     required this.epoch,
     required this.eccentricity,
@@ -12,6 +14,7 @@ class KeplerianElements {
     required this.drag,
   });
 
+  /// Epoch date.
   final double epoch;
 
   /// Eccentricity in the range 0 <= e < 1.
@@ -29,6 +32,7 @@ class KeplerianElements {
   /// For our purposes, eccentricity must be in the range 0 <= e < 1.
   final double eccentricity;
 
+  /// Mean Motion.
   final double meanMotion;
 
   /// The orbit ellipse lies in a plane known as the orbital plane. The orbital plane always goes through the center of the earth,
@@ -81,8 +85,10 @@ class KeplerianElements {
   /// By convention, ARGP is an angle between 0 and 360 degrees.
   final double argumentOfPeriapsis;
 
+  /// The drag on the satellite due to atmosphere.
   final double drag;
 
+  /// Calculates minutes past epoch.
   double getMinutesPastEpoch(DateTime utc) {
     int year = epoch ~/ 1000.0;
     final doy = epoch - (year * 1000.0);

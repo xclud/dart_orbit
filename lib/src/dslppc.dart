@@ -1,4 +1,6 @@
+/// Parameters for Deep Space Long Period Periodic.
 class DeepSpaceLongPeriodPeriodicContributions {
+  /// The constructor.
   const DeepSpaceLongPeriodPeriodicContributions({
     required this.ep,
     required this.inclp,
@@ -7,9 +9,18 @@ class DeepSpaceLongPeriodPeriodicContributions {
     required this.mp,
   });
 
+  /// ep
   final double ep;
+
+  /// inclp
   final double inclp;
+
+  /// nodep
   final double nodep;
+
+  /// argpp
   final double argpp;
+
+  /// mp
   final double mp;
 }

@@ -71,6 +71,7 @@ import 'dart:math';
 /// Provides deep space common items used by both the secular and periodics subroutines.
 
 class DeepSpaceCommon {
+  /// The constructor.
   const DeepSpaceCommon({
     required this.snodm,
     required this.cnodm,
@@ -155,6 +156,7 @@ class DeepSpaceCommon {
     required this.zmos,
   });
 
+  /// Create a [DeepSpaceCommon] by calculating from parameters.
   factory DeepSpaceCommon.calculate({
     required double epoch,
     required double ep,
@@ -236,7 +238,7 @@ class DeepSpaceCommon {
     const double pgho = 0.0;
     const double pho = 0.0;
     final day = epoch + 18261.5 + (tc / 1440.0);
-    final xnodce = (4.5236020 - (9.2422029e-4 * day)) % twoPi;
+    final xnodce = (4.5236020 - (9.2422029e-4 * day)) % _twoPi;
     final stem = sin(xnodce);
     final ctem = cos(xnodce);
     final zcosil = 0.91375164 - (0.03568096 * ctem);
@@ -349,8 +351,8 @@ class DeepSpaceCommon {
       }
     }
 
-    final zmol = (4.7199672 + ((0.22997150 * day) - gam)) % twoPi;
-    final zmos = (6.2565837 + (0.017201977 * day)) % twoPi;
+    final zmol = (4.7199672 + ((0.22997150 * day) - gam)) % _twoPi;
+    final zmos = (6.2565837 + (0.017201977 * day)) % _twoPi;
 
     //  ------------------------ do solar terms ----------------------
     final se2 = 2.0 * ss1 * ss6;
@@ -465,90 +467,248 @@ class DeepSpaceCommon {
     );
   }
 
-  static const double twoPi = pi * 2;
-  static const double deg2rad = pi / 180.0;
-  static const double rad2deg = 180 / pi;
-  static const double x2o3 = 2.0 / 3.0;
+  static const double _twoPi = pi * 2;
 
+  /// snodm
   final double snodm;
+
+  /// cnodm
   final double cnodm;
+
+  /// sinim
   final double sinim;
+
+  /// cosim
   final double cosim;
+
+  /// sinomm
   final double sinomm;
+
+  /// cosomm
   final double cosomm;
+
+  /// day
   final double day;
+
+  /// e3
   final double e3;
+
+  /// ee2
   final double ee2;
+
+  /// em
   final double em;
+
+  /// emsq
   final double emsq;
+
+  /// gam
   final double gam;
+
+  /// peo
   final double peo;
+
+  /// pgho
   final double pgho;
+
+  /// pho
   final double pho;
+
+  /// pinco
   final double pinco;
+
+  /// plo
   final double plo;
+
+  /// rtemsq
   final double rtemsq;
+
+  /// se2
   final double se2;
+
+  /// se3
   final double se3;
+
+  /// sgh2
   final double sgh2;
+
+  /// sgh3
   final double sgh3;
+
+  /// sgh4
   final double sgh4;
+
+  /// sh2
   final double sh2;
+
+  /// sh3
   final double sh3;
+
+  /// si2
   final double si2;
+
+  /// si3
   final double si3;
+
+  /// sl2
   final double sl2;
+
+  /// sl3
   final double sl3;
+
+  /// sl4
   final double sl4;
+
+  /// s1
   final double s1;
+
+  /// s2
   final double s2;
+
+  /// s3
   final double s3;
+
+  /// s4
   final double s4;
+
+  /// s5
   final double s5;
+
+  /// s6
   final double s6;
+
+  /// s7
   final double s7;
+
+  /// ss1
   final double ss1;
+
+  /// ss2
   final double ss2;
+
+  /// ss3
   final double ss3;
+
+  /// ss4
   final double ss4;
+
+  /// ss5
   final double ss5;
+
+  /// ss6
   final double ss6;
+
+  /// ss7
   final double ss7;
+
+  /// sz1
   final double sz1;
+
+  /// sz2
   final double sz2;
+
+  /// sz3
   final double sz3;
+
+  /// sz11
   final double sz11;
+
+  /// sz12
   final double sz12;
+
+  /// sz13
   final double sz13;
+
+  /// sz21
   final double sz21;
+
+  /// sz22
   final double sz22;
+
+  /// sz23
   final double sz23;
+
+  /// sz31
   final double sz31;
+
+  /// sz32
   final double sz32;
+
+  /// sz33
   final double sz33;
+
+  /// xgh2
   final double xgh2;
+
+  /// xgh3
   final double xgh3;
+
+  /// xgh4
   final double xgh4;
+
+  /// xh2
   final double xh2;
+
+  /// xh3
   final double xh3;
+
+  /// xi2
   final double xi2;
+
+  /// xi3
   final double xi3;
+
+  /// xl2
   final double xl2;
+
+  /// xl3
   final double xl3;
+
+  /// xl4
   final double xl4;
+
+  /// nm
   final double nm;
+
+  /// z1
   final double z1;
+
+  /// z2
   final double z2;
+
+  /// z3
   final double z3;
+
+  /// z11
   final double z11;
+
+  /// z12
   final double z12;
+
+  /// z13
   final double z13;
+
+  /// z21
   final double z21;
+
+  /// z22
   final double z22;
+
+  /// z23
   final double z23;
+
+  /// z31
   final double z31;
+
+  /// z32
   final double z32;
+
+  /// z33
   final double z33;
+
+  /// zmol
   final double zmol;
+
+  /// zmos
   final double zmos;
 }

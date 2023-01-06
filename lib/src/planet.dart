@@ -1,5 +1,8 @@
+part of orbit;
+
 /// Abstract planet for calculations.
 abstract class Planet {
+  /// The constructor.
   const Planet({
     required this.radius,
     required this.mu,
@@ -14,8 +17,14 @@ abstract class Planet {
 
   /// Gravitational constant.
   final double mu;
+
+  /// j2
   final double j2;
+
+  /// j3
   final double j3;
+
+  /// j4
   final double j4;
 
   /// Flattening of the planet.

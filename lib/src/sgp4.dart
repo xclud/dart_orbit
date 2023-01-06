@@ -1,10 +1,8 @@
-import 'dart:math';
+part of orbit;
 
-import 'package:orbit/orbit.dart';
-import 'package:orbit/src/deep_space_common.dart';
-import 'package:orbit/src/dslppc.dart';
-
+/// SGP4 Calculator.
 class SGP4 {
+  /// The constructor.
   SGP4(this.keplerianElements, this.planet) {
     no = keplerianElements.meanMotion / _xpdotp;
     bstar = keplerianElements.drag;
@@ -419,100 +417,280 @@ class SGP4 {
     }
   }
 
+  /// Keplerian Elements.
   final KeplerianElements keplerianElements;
+
+  /// The planet.
   final Planet planet;
 
+  /// _method
   late final _Method _method;
+
+  /// aycof
   late final double aycof;
+
+  /// con41
   late final double con41;
+
+  /// cc1
   late final double cc1;
+
+  /// cc4
   late final double cc4;
+
+  /// isimp
   late final int isimp;
+
+  /// cc5
   late final double cc5;
+
+  /// d2
   late final double d2;
+
+  /// d3
   late final double d3;
+
+  /// d4
   late final double d4;
+
+  /// delmo
   late final double delmo;
+
+  /// eta
   late final double eta;
+
+  /// sinmao
   late final double sinmao;
+
+  /// argpdot
   late final double argpdot;
+
+  /// omgcof
   late final double omgcof;
 
+  /// x1mth2
   late final double x1mth2;
+
+  /// xlcof
   late final double xlcof;
+
+  /// x7thm1
   late final double x7thm1;
 
+  /// t2cof
   late final double t2cof;
+
+  /// t3cof
   late final double t3cof;
+
+  /// t4cof
   late final double t4cof;
+
+  /// t5cof
   late final double t5cof;
+
+  /// mdot
   late final double mdot;
+
+  /// nodedot
   late final double nodedot;
+
+  /// xmcof
   late final double xmcof;
+
+  /// nodecf
   late final double nodecf;
+
+  /// irez
   late final int irez;
+
+  /// _operationmode
   late final _OpsMode _operationmode;
+
+  /// ecco
   late final double ecco;
+
+  /// no
   late final double no;
+
+  /// gsto
   late final double gsto;
+
+  /// d2201
   late final double d2201;
+
+  /// d2211
   late final double d2211;
+
+  /// d3210
   late final double d3210;
+
+  /// d3222
   late final double d3222;
+
+  /// d4410
   late final double d4410;
+
+  /// d4422
   late final double d4422;
+
+  /// d5220
   late final double d5220;
+
+  /// d5232
   late final double d5232;
+
+  /// d5421
   late final double d5421;
+
+  /// d5433
   late final double d5433;
+
+  /// dedt
   late final double dedt;
+
+  /// del1
   late final double del1;
+
+  /// del2
   late final double del2;
+
+  /// del3
   late final double del3;
+
+  /// didt
   late final double didt;
+
+  /// dmdt
   late final double dmdt;
+
+  /// dnodt
   late final double dnodt;
+
+  /// domdt
   late final double domdt;
+
+  /// e3
   late final double e3;
+
+  /// ee2
   late final double ee2;
+
+  /// peo
   late final double peo;
+
+  /// pgho
   late final double pgho;
+
+  /// pho
   late final double pho;
+
+  /// pinco
   late final double pinco;
+
+  /// plo
   late final double plo;
+
+  /// se2
   late final double se2;
+
+  /// se3
   late final double se3;
+
+  /// sgh2
   late final double sgh2;
+
+  /// sgh3
   late final double sgh3;
+
+  /// sgh4
   late final double sgh4;
+
+  /// sh2
   late final double sh2;
+
+  /// sh3
   late final double sh3;
+
+  /// si2
   late final double si2;
+
+  /// si3
   late final double si3;
+
+  /// sl2
   late final double sl2;
+
+  /// sl3
   late final double sl3;
+
+  /// sl4
   late final double sl4;
+
+  /// xfact
   late final double xfact;
+
+  /// xgh2
   late final double xgh2;
+
+  /// xgh3
   late final double xgh3;
+
+  /// xgh4
   late final double xgh4;
+
+  /// xh2
   late final double xh2;
+
+  /// xh3
   late final double xh3;
+
+  /// xi2
   late final double xi2;
+
+  /// xi3
   late final double xi3;
+
+  /// xl2
   late final double xl2;
+
+  /// zmol
   late final double zmol;
+
+  /// zmos
   late final double zmos;
+
+  /// xlamo
   late final double xlamo;
+
+  /// atime
   late final double atime;
+
+  /// xli
   late final double xli;
+
+  /// xni
   late final double xni;
+
+  /// xl4
   late final double xl4;
+
+  /// bstar
   late final double bstar;
+
+  /// argpo
   late final double argpo;
+
+  /// inclo
   late final double inclo;
+
+  /// mo
   late final double mo;
+
+  /// nodeo
   late final double nodeo;
+
+  /// xl3
   late final double xl3;
 
   /* -----------------------------------------------------------------------------
@@ -931,6 +1109,7 @@ class SGP4 {
      *    vallado, crawford, hujsak, kelso  2006
      ----------------------------------------------------------------------------*/
 
+  /// Get Position.
   OrbitalState getPosition(double minutes) {
     var satrec = this;
     var planet = satrec.planet;
@@ -1192,6 +1371,7 @@ class SGP4 {
     return OrbitalState(r, v);
   }
 
+  /// Get Position.
   OrbitalState getPositionByDateTime(DateTime utc) {
     final minutes = keplerianElements.getMinutesPastEpoch(utc);
 
@@ -1327,9 +1507,12 @@ class _DsInitResult {
   final double xni;
 }
 
+/// Propagation Exception.
 class PropagationException implements Exception {
+  /// The constructor.
   const PropagationException(this.message, [int n = 0]);
 
+  /// Error message.
   final String message;
 }
 

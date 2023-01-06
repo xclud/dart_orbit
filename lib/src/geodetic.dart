@@ -1,3 +1,5 @@
+part of orbit;
+
 /// Encapsulates geocentric coordinates.
 class Geodetic {
   /// Creates a new instance of the class with the given components.

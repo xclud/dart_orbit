@@ -1,21 +1,21 @@
+/// Calculates the Julian date.
 double julian(int year, double doy) {
-  {
-    // Now calculate Julian date
-    // Ref: "Astronomical Formulae for Calculators", Jean Meeus, pages 23-25
+  // Now calculate Julian date
+  // Ref: "Astronomical Formulae for Calculators", Jean Meeus, pages 23-25
 
-    year--;
+  year--;
 
-    // Centuries are not leap years unless they divide by 400
-    int A = year ~/ 100;
-    int B = 2 - A + (A ~/ 4);
+  // Centuries are not leap years unless they divide by 400
+  int A = year ~/ 100;
+  int B = 2 - A + (A ~/ 4);
 
-    double jan01 =
-        (365.25 * year).toInt() + (30.6001 * 14).toInt() + 1720994.5 + B;
+  double jan01 =
+      (365.25 * year).toInt() + (30.6001 * 14).toInt() + 1720994.5 + B;
 
-    return jan01 + doy;
-  }
+  return jan01 + doy;
 }
 
+/// Converts from Julian to [DateTime].
 DateTime toTime(double j) {
   final double d2 = j + 0.5;
   final int Z = d2.toInt();

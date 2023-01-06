@@ -1,3 +1,5 @@
+part of orbit;
+
 /// Encapsulates topo-centric coordinates.
 class LookAngle {
   /// Creates a new instance of the class from the given components.
