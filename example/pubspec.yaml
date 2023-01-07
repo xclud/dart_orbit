@@ -32,6 +32,8 @@ dependencies:
   flutter:
     sdk: flutter
   map: any
+  latlng: any
+  cached_network_image: any
   orbit:
     path: ../
 
