@@ -2,6 +2,7 @@
 library orbit;
 
 import 'dart:math';
+import 'package:latlng/latlng.dart';
 
 import 'package:orbit/src/deep_space_common.dart';
 import 'package:orbit/src/julian.dart';
@@ -19,3 +20,4 @@ part 'src/orbital_state.dart';
 part 'src/planet.dart';
 part 'src/sgp4.dart';
 part 'src/topocentric.dart';
+part 'src/celestial.dart';

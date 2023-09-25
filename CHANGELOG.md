@@ -1,3 +1,7 @@
+## 0.0.3
+
+* getSunLocation and getMoonLocation.
+
 ## 0.0.2
 
 * SGP4 implemented.
