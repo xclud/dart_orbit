@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:latlng/latlng.dart';
 import 'package:map/map.dart';
+import 'package:orbit/orbit.dart';
 
 import 'utils.dart';
-import 'utils/celestial.dart';
 import 'utils/twilight.dart';
 import 'utils/twilight_painter.dart';
 import 'utils/viewport_painter.dart';
