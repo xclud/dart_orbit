@@ -1,3 +1,7 @@
+## 0.0.4
+
+* getGroundTrack implemented.
+
 ## 0.0.3
 
 * getSunLocation and getMoonLocation.
