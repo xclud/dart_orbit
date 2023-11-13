@@ -14,6 +14,13 @@ import 'utils/twilight.dart';
 import 'utils/twilight_painter.dart';
 import 'utils/viewport_painter.dart';
 
+class _PositionLookAngle {
+  const _PositionLookAngle(this.location, this.position, this.lookAngle);
+  final LatLng location;
+  final Offset position;
+  final LookAngle lookAngle;
+}
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -25,7 +32,32 @@ class _HomePageState extends State<HomePage> {
   LatLng? mousePointer;
   MapStyle currentMap = mapStyles[0];
 
-  final observer = const LatLng(35.68, 51.31);
+  final observers = const [
+    LatLng(40, 130),
+    LatLng(40, 90),
+    LatLng(40, 50),
+    LatLng(40, 10),
+    LatLng(40, -30),
+    LatLng(40, -70),
+    LatLng(40, -110),
+    LatLng(-40, 130),
+    LatLng(-40, 90),
+    LatLng(-40, 50),
+    LatLng(-40, 10),
+    LatLng(-40, -30),
+    LatLng(-40, -70),
+    LatLng(-40, -110),
+
+    //
+    LatLng(0, 150),
+    LatLng(0, 110),
+    LatLng(0, 70),
+    LatLng(0, 30),
+    LatLng(0, -10),
+    LatLng(0, -50),
+    LatLng(0, -90),
+    LatLng(0, -130),
+  ];
 
   final controller = MapController(
     location: const LatLng(0, 0),
@@ -150,16 +182,19 @@ class _HomePageState extends State<HomePage> {
             polyline.add(viewport.bottomRight);
           }
 
-          final sunLookAngle = getSunLookAngle(
-            now.toLocal(),
-            observer,
-            1400,
-          );
+          final pla = observers
+              .map(
+                (e) => _PositionLookAngle(
+                  e,
+                  transformer.toOffset(e),
+                  getSunLookAngle(now.toLocal(), e, 0),
+                ),
+              )
+              .toList();
 
           final sunLocation = getSunLocation(now);
           final moonLocation = getMoonLocation(now);
           final sunPosition = transformer.toOffset(sunLocation);
-          final observerPosition = transformer.toOffset(observer);
           final moonPosition = transformer.toOffset(moonLocation);
           const sunSize = 48.0;
           const moonSize = 48.0;
@@ -197,25 +232,28 @@ class _HomePageState extends State<HomePage> {
             ),
           );
 
-          markerWidgets.add(
-            Positioned(
-              left: observerPosition.dx - sunSize / 2,
-              top: observerPosition.dy - sunSize / 2,
+          markerWidgets.addAll(pla.map(
+            (op) => Positioned(
+              left: op.position.dx - sunSize / 2,
+              top: op.position.dy - sunSize / 2,
               width: sunSize,
               height: sunSize,
               child: Tooltip(
-                message: 'Look Angle',
+                message:
+                    'Look Angle\nElevation: ${op.lookAngle.elevation}\nAzimuth: ${op.lookAngle.azimuth}',
                 child: Transform.rotate(
-                  angle: (sunLookAngle.azimuth - 90) / 180.0 * pi,
-                  child: const Icon(
+                  angle: (op.lookAngle.azimuth) / 180.0 * pi,
+                  child: Icon(
                     Icons.arrow_circle_up,
-                    color: Colors.red,
+                    color: op.lookAngle.elevation > 0
+                        ? Colors.green.shade900
+                        : Colors.red,
                     size: sunSize,
                   ),
                 ),
               ),
             ),
-          );
+          ));
 
           String? mousePosition;
           if (mouse != null) {
