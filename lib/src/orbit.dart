@@ -1,4 +1,4 @@
-part of orbit;
+part of '../orbit.dart';
 
 /// The main class to start orbit calculation.
 class Orbit {

@@ -1,4 +1,4 @@
-part of orbit;
+part of '../orbit.dart';
 
 /// SGP4 Calculator.
 class SGP4 {

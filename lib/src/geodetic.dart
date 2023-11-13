@@ -1,4 +1,4 @@
-part of orbit;
+part of '../orbit.dart';
 
 /// Encapsulates geocentric coordinates.
 class Geodetic {

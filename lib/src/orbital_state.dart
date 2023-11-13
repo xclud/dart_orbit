@@ -1,4 +1,4 @@
-part of orbit;
+part of '../orbit.dart';
 
 /// RV Pair for satellite state.
 class OrbitalState {

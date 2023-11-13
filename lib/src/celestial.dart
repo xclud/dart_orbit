@@ -1,4 +1,4 @@
-part of orbit;
+part of '../orbit.dart';
 
 /// Calculates the Sun position on a given UTC time.
 LatLng getSunLocation(DateTime utcNow) {

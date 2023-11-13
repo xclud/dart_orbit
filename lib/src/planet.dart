@@ -1,4 +1,4 @@
-part of orbit;
+part of '../orbit.dart';
 
 /// Abstract planet for calculations.
 abstract class Planet {

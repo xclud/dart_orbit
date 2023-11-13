@@ -1,4 +1,4 @@
-part of orbit;
+part of '../orbit.dart';
 
 /// Topocentric parameters.
 class Topocentric {
