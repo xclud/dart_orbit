@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Satellite Tracker',
+      title: 'Orbit',
       theme: ThemeData(
         colorSchemeSeed: Colors.purple,
         brightness: Brightness.dark,

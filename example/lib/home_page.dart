@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Satellite Tracker'),
+        title: const Text('Orbit'),
         actions: [
           PopupMenuButton<MapStyle>(
             initialValue: currentMap,
