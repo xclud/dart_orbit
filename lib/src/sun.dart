@@ -1015,12 +1015,12 @@ void _calculateEOTAndSunRiseTransitSet(
 }
 
 /// Calculates the look angles for the specified [observer].
-LookAngle getSunLookAngle(
-    DateTime local, LatLng observer, double timezone, double altitude) {
+LookAngle getSunLookAngle(DateTime local, LatLng observer, double altitude) {
   final date = _Date(local.year, local.month, local.day, local.hour,
       local.minute, local.second.toDouble());
 
   final spa = _SPAData();
+  final timezone = observer.longitude * 15; // lng / 360.0 * 24.0;
 
   _getSunLookAngle(date, spa, observer, timezone, altitude);
 
