@@ -32,32 +32,17 @@ class _HomePageState extends State<HomePage> {
   LatLng? mousePointer;
   MapStyle currentMap = mapStyles[0];
 
-  final observers = const [
-    LatLng(40, 130),
-    LatLng(40, 90),
-    LatLng(40, 50),
-    LatLng(40, 10),
-    LatLng(40, -30),
-    LatLng(40, -70),
-    LatLng(40, -110),
-    LatLng(-40, 130),
-    LatLng(-40, 90),
-    LatLng(-40, 50),
-    LatLng(-40, 10),
-    LatLng(-40, -30),
-    LatLng(-40, -70),
-    LatLng(-40, -110),
+  final observers = <LatLng>[];
 
-    //
-    LatLng(0, 150),
-    LatLng(0, 110),
-    LatLng(0, 70),
-    LatLng(0, 30),
-    LatLng(0, -10),
-    LatLng(0, -50),
-    LatLng(0, -90),
-    LatLng(0, -130),
-  ];
+  @override
+  void initState() {
+    for (int i = -18; i <= 18; i++) {
+      for (int j = -8; j <= 8; j++) {
+        observers.add(LatLng(j * 10, i * 20));
+      }
+    }
+    super.initState();
+  }
 
   final controller = MapController(
     location: const LatLng(0, 0),
@@ -187,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                 (e) => _PositionLookAngle(
                   e,
                   transformer.toOffset(e),
-                  getSunLookAngle(now.toLocal(), e, 0),
+                  getSunLookAngle(now, e, 0),
                 ),
               )
               .toList();
