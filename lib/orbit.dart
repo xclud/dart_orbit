@@ -21,3 +21,4 @@ part 'src/planet.dart';
 part 'src/sgp4.dart';
 part 'src/topocentric.dart';
 part 'src/celestial.dart';
+part 'src/sun.dart';
