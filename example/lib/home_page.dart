@@ -25,6 +25,8 @@ class _HomePageState extends State<HomePage> {
   LatLng? mousePointer;
   MapStyle currentMap = mapStyles[0];
 
+  final observer = const LatLng(35.68, 51.31);
+
   final controller = MapController(
     location: const LatLng(0, 0),
     zoom: 3,
@@ -148,9 +150,16 @@ class _HomePageState extends State<HomePage> {
             polyline.add(viewport.bottomRight);
           }
 
+          final sunLookAngle = getSunLookAngle(
+            now.toLocal(),
+            observer,
+            1400,
+          );
+
           final sunLocation = getSunLocation(now);
           final moonLocation = getMoonLocation(now);
           final sunPosition = transformer.toOffset(sunLocation);
+          final observerPosition = transformer.toOffset(observer);
           final moonPosition = transformer.toOffset(moonLocation);
           const sunSize = 48.0;
           const moonSize = 48.0;
@@ -170,6 +179,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           );
+
           markerWidgets.add(
             Positioned(
               left: moonPosition.dx - moonSize / 2,
@@ -182,6 +192,26 @@ class _HomePageState extends State<HomePage> {
                   Icons.nightlight,
                   color: Colors.yellowAccent.withOpacity(0.8),
                   size: moonSize,
+                ),
+              ),
+            ),
+          );
+
+          markerWidgets.add(
+            Positioned(
+              left: observerPosition.dx - sunSize / 2,
+              top: observerPosition.dy - sunSize / 2,
+              width: sunSize,
+              height: sunSize,
+              child: Tooltip(
+                message: 'Look Angle',
+                child: Transform.rotate(
+                  angle: (sunLookAngle.azimuth - 90) / 180.0 * pi,
+                  child: const Icon(
+                    Icons.arrow_circle_up,
+                    color: Colors.red,
+                    size: sunSize,
+                  ),
                 ),
               ),
             ),
