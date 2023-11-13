@@ -1,3 +1,7 @@
+## 0.0.5
+
+* getSunLookAngle implemented.
+
 ## 0.0.4
 
 * getGroundTrack implemented.
