@@ -1,6 +1,6 @@
 {
-    "name": "Satellite Tracker",
-    "short_name": "Satellite Tracker",
+    "name": "Orbit",
+    "short_name": "Orbit",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
