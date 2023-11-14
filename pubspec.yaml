@@ -1,6 +1,6 @@
 name: orbit
 description: TLE and NORAD SGP4/SDP4/SGP8/SDP8 Implementation for Dart and Flutter.
-version: 0.0.5
+version: 0.0.6
 homepage: https://pwa.ir
 repository: https://github.com/xclud/dart_orbit
 
