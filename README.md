@@ -22,6 +22,8 @@ TLE and NORAD SGP4/SDP4/SGP8/SDP8 Implementation for Dart and Flutter.
 * Look angle calculation from the observer location on the planet.
 * Earth WGS72 and WGS84 and generic planet.
 * Ground Track calculation.
+* Sun location and look angle calculation.
+* Moon location calculation.
 
 ## Usage
 
