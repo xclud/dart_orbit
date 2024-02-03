@@ -13,6 +13,7 @@ part 'src/ecef.dart';
 part 'src/eci.dart';
 part 'src/geodetic.dart';
 
+part 'src/two_line_element.dart';
 part 'src/keplerian_elements.dart';
 part 'src/look_angle.dart';
 part 'src/orbit.dart';
