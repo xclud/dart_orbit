@@ -28,17 +28,17 @@ class TwoLineElement {
 
   factory TwoLineElement._parseLines(String name, String line1, String line2) {
     if (name.startsWith('0 ')) {
-      name = name.substring(2);
+      name = name.substring(2).trim();
     }
 
-    final epochS = line1.substring(18, 14).trim();
-    final eccentricityS = line2.substring(26, 7).trim();
-    final meanMotionS = line2.substring(52, 11).trim();
-    final inclinationS = line2.substring(8, 8).trim();
-    final raanS = line2.substring(17, 8).trim();
-    final meanAnomalyS = line2.substring(43, 8).trim();
-    final argumentOfPeriapsisS = line2.substring(34, 8).trim();
-    final dragS = line1.substring(53, 8);
+    final epochS = line1.sub(18, 14).trim();
+    final eccentricityS = line2.sub(26, 7).trim();
+    final meanMotionS = line2.sub(52, 11).trim();
+    final inclinationS = line2.sub(8, 8).trim();
+    final raanS = line2.sub(17, 8).trim();
+    final meanAnomalyS = line2.sub(43, 8).trim();
+    final argumentOfPeriapsisS = line2.sub(34, 8).trim();
+    final dragS = line1.sub(53, 8);
 
     final epoch = double.parse(epochS);
     final eccentricity = double.parse('0.$eccentricityS');
@@ -81,6 +81,11 @@ class TwoLineElement {
     while (curLineNum < lines.length) {
       final curLine = lines[curLineNum];
 
+      if (curLine.trim().isEmpty) {
+        curLineNum++;
+        continue;
+      }
+
       if (curLine.startsWith('1 ')) {
         final nxtLine = lines[curLineNum + 1];
         final tle = TwoLineElement._parseLines('<No Name>', curLine, nxtLine);
@@ -102,11 +107,17 @@ class TwoLineElement {
 }
 
 double _expToDecimal(String str) {
-  final sign = str.substring(0, 1);
-  final mantissa = str.substring(1, 5);
-  final exponent = str.substring(6, 2).trim();
+  final sign = str.sub(0, 1);
+  final mantissa = str.sub(1, 5);
+  final exponent = str.sub(6, 2).trim();
 
   var val = double.parse('${sign}0.${mantissa}e$exponent');
 
   return val;
+}
+
+extension _StringExtensions on String {
+  String sub(int start, int length) {
+    return substring(start, start + length);
+  }
 }
