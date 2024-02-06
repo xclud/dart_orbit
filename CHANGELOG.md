@@ -1,3 +1,7 @@
+## 0.0.11
+
+* Use `latlng` version `^2.0.0`.
+
 ## 0.0.10
 
 * SGP4 bugs fixed.

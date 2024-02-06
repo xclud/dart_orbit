@@ -22,8 +22,8 @@ int _validateInputs(_Date date, _SPAData spa, LatLng latLng) {
   if ((date.Hour == 24) && (date.Second > 0)) return 6;
 
   if ((spa.deltaT).abs() > 8000) return 7;
-  if ((latLng.longitude).abs() > 180) return 9;
-  if ((latLng.latitude).abs() > 90) return 10;
+  if ((latLng.longitude.degrees).abs() > 180) return 9;
+  if ((latLng.latitude.degrees).abs() > 90) return 10;
   if ((spa.atmosphericRefraction).abs() > 5) return 16;
 
   if ((spa.function == _CalculationMode.incidence) ||
@@ -921,6 +921,9 @@ void _calculateEOTAndSunRiseTransitSet(
   LatLng latLng,
   double timezone,
 ) {
+  final longitude = latLng.longitude.degrees;
+  final latitude = latLng.latitude.degrees;
+
   final alpha = List<double>.filled(_jdCount, 0);
   final delta = List<double>.filled(_jdCount, 0);
   final h0Prime = -1 * (_sunRadius + spa.atmosphericRefraction);
@@ -945,8 +948,8 @@ void _calculateEOTAndSunRiseTransitSet(
     sunRts.Jd++;
   }
 
-  final transit = _approxSunTransitTime(alpha[_jdZero], latLng.longitude, nu);
-  var h0 = _sunHourAngleAtRiseSet(latLng.latitude, delta[_jdZero], h0Prime);
+  final transit = _approxSunTransitTime(alpha[_jdZero], longitude, nu);
+  var h0 = _sunHourAngleAtRiseSet(latitude, delta[_jdZero], h0Prime);
 
   if (h0 >= 0) {
     final mRts = _approxSunRiseAndSet(transit, h0);
@@ -966,18 +969,15 @@ void _calculateEOTAndSunRiseTransitSet(
     final deltaPrimeSet = _rtsAlphaDeltaPrime(delta, nSet);
     final deltaPrimeTransit = _rtsAlphaDeltaPrime(delta, nTransit);
 
-    final hPrimeRise =
-        _limitDegrees180pm(nuRise + latLng.longitude - alphaPrimeRise);
-    final hPrimeSet =
-        _limitDegrees180pm(nuSet + latLng.longitude - alphaPrimeSet);
+    final hPrimeRise = _limitDegrees180pm(nuRise + longitude - alphaPrimeRise);
+    final hPrimeSet = _limitDegrees180pm(nuSet + longitude - alphaPrimeSet);
     final hPrimeTransit =
-        _limitDegrees180pm(nuTransit + latLng.longitude - alphaPrimeTransit);
+        _limitDegrees180pm(nuTransit + longitude - alphaPrimeTransit);
 
-    final hRtsRise =
-        _rtsSunAltitude(latLng.latitude, deltaPrimeRise, hPrimeRise);
-    final hRtsSet = _rtsSunAltitude(latLng.latitude, deltaPrimeSet, hPrimeSet);
+    final hRtsRise = _rtsSunAltitude(latitude, deltaPrimeRise, hPrimeRise);
+    final hRtsSet = _rtsSunAltitude(latitude, deltaPrimeSet, hPrimeSet);
     final hRtsTransit =
-        _rtsSunAltitude(latLng.latitude, deltaPrimeTransit, hPrimeTransit);
+        _rtsSunAltitude(latitude, deltaPrimeTransit, hPrimeTransit);
 
     spa.Srha = hPrimeRise;
     spa.Ssha = hPrimeSet;
@@ -991,7 +991,7 @@ void _calculateEOTAndSunRiseTransitSet(
           mRts.rise,
           hRtsRise,
           deltaPrimeRise,
-          latLng.latitude,
+          latitude,
           hPrimeRise,
           h0Prime,
         ),
@@ -1002,7 +1002,7 @@ void _calculateEOTAndSunRiseTransitSet(
         mRts.set,
         hRtsSet,
         deltaPrimeSet,
-        latLng.latitude,
+        latitude,
         hPrimeSet,
         h0Prime,
       ),
@@ -1016,7 +1016,7 @@ void _calculateEOTAndSunRiseTransitSet(
 
 /// Calculates the look angles for the specified [observer].
 LookAngle getSunLookAngle(DateTime utc, LatLng observer, double altitude) {
-  final timezone = observer.longitude * 15; // lng / 360.0 * 24.0;
+  final timezone = observer.longitude.degrees * 15; // lng / 360.0 * 24.0;
 
   final hour = timezone;
   final min = 60.0 * (hour - hour.toInt());
@@ -1058,6 +1058,9 @@ int _getSunLookAngle(
     return result;
   }
 
+  final longitude = latLng.longitude.degrees;
+  final latitude = latLng.latitude.degrees;
+
   spa.Jd = _julianDay(
     date.year,
     date.month,
@@ -1072,14 +1075,14 @@ int _getSunLookAngle(
 
   spa.observerHourAngle = _observerHourAngle(
     spa.Nu,
-    latLng.longitude,
+    longitude,
     spa.Alpha,
   );
 
   spa.Xi = _sunEquatorialHorizontalParallax(spa.R);
 
   final delta = _rightAscensionParallaxAndTopocentricDec(
-    latLng.latitude,
+    latitude,
     altitude,
     spa.Xi,
     spa.observerHourAngle,
@@ -1093,14 +1096,14 @@ int _getSunLookAngle(
       _topocentricLocalHourAngle(spa.observerHourAngle, delta.deltaAlpha);
 
   spa.elevation =
-      _topocentricElevationAngle(latLng.latitude, spa.DeltaPrime, spa.HPrime);
+      _topocentricElevationAngle(latitude, spa.DeltaPrime, spa.HPrime);
   spa.DelE = _atmosphericRefractionCorrection(
       spa.pressure, spa.temperature, spa.atmosphericRefraction, spa.elevation);
   spa.E = _topocentricElevationAngleCorrected(spa.elevation, spa.DelE);
 
   spa.zenith = _topocentricZenithAngle(spa.E);
-  spa.AzimuthAstro = _topocentricAzimuthAngleAstro(
-      spa.HPrime, latLng.latitude, spa.DeltaPrime);
+  spa.AzimuthAstro =
+      _topocentricAzimuthAngleAstro(spa.HPrime, latitude, spa.DeltaPrime);
   spa.Azimuth = _topocentricAzimuthAngle(spa.AzimuthAstro);
 
   if ((spa.function == _CalculationMode.incidence) ||

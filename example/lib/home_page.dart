@@ -38,14 +38,14 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     for (int i = -18; i <= 18; i++) {
       for (int j = -8; j <= 8; j++) {
-        observers.add(LatLng(j * 10, i * 20));
+        observers.add(LatLng(Angle.degree(j * 10), Angle.degree(i * 20)));
       }
     }
     super.initState();
   }
 
   final controller = MapController(
-    location: const LatLng(0, 0),
+    location: const LatLng(Angle.degree(0), Angle.degree(0)),
     zoom: 3,
   );
 
@@ -114,8 +114,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: theme.colorScheme.inversePrimary,
         title: const Text('Orbit'),
         actions: [
           PopupMenuButton<MapStyle>(
@@ -247,7 +250,7 @@ class _HomePageState extends State<HomePage> {
 
           String? mousePosition;
           if (mouse != null) {
-            var lng = mouse.longitude % 360;
+            var lng = mouse.longitude.degrees % 360;
             while (lng >= 180) {
               lng -= 360;
             }
@@ -256,7 +259,7 @@ class _HomePageState extends State<HomePage> {
             }
 
             mousePosition =
-                '${mouse.latitude.toStringAsFixed(2)}°, ${lng.toStringAsFixed(2)}°';
+                '${mouse.latitude.degrees.toStringAsFixed(2)}°, ${lng.toStringAsFixed(2)}°';
           }
 
           return GestureDetector(

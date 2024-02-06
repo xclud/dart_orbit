@@ -177,9 +177,7 @@ LatLng _toLatLng(double gst, double x, double y, double z) {
     }
   }
 
-  latitude = 180.0 / pi * latitude;
-
-  return LatLng(latitude, longitude);
+  return LatLng(Angle.radian(latitude), Angle.degree(longitude));
 }
 
 double _toJulian(DateTime utc) {
