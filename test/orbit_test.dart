@@ -51,7 +51,7 @@ void main() {
   });
 
   test('SGP4', () {
-    final t = TwoLineElement.parse(sl31155);
+    final t = TwoLineElement.parse(oscar);
 
     final sgp = SGP4(t.keplerianElements, wgs84);
     final observer = LatLngAlt(
@@ -59,7 +59,7 @@ void main() {
       Angle.degree(50.786492),
       1185.9,
     );
-    final g = DateTime.utc(2024, 2, 6, 21, 0, 0);
+    var g = DateTime.utc(2024, 2, 6, 20, 54, 45);
     final rv = sgp.getPositionByDateTime(g);
     final ecf = rv.r.toEcfByDateTime(g);
     final tp = wgs84.topocentric(observer, ecf);
