@@ -227,10 +227,10 @@ class _HomePageState extends State<HomePage> {
                 message:
                     'Look Angle\nElevation: ${op.lookAngle.elevation}\nAzimuth: ${op.lookAngle.azimuth}',
                 child: Transform.rotate(
-                  angle: (op.lookAngle.azimuth) / 180.0 * pi,
+                  angle: op.lookAngle.azimuth.radians,
                   child: Icon(
                     Icons.arrow_circle_up,
-                    color: op.lookAngle.elevation > 0
+                    color: op.lookAngle.elevation.degrees > 0
                         ? Colors.green.shade900
                         : Colors.red,
                     size: sunSize,
