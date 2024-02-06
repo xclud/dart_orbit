@@ -90,13 +90,14 @@ class KeplerianElements {
 
   /// Calculates minutes past epoch.
   double getMinutesPastEpoch(DateTime utc) {
-    int year = epoch ~/ 1000.0;
-    final doy = epoch - (year * 1000.0);
+    int year1 = (epoch / 1000.0).floor();
+    final doy1 = epoch - (year1 * 1000.0);
 
-    year += year > 57 ? 1900 : 2000;
-    final j = julian(year, doy);
-    final epch = toTime(j);
+    year1 += year1 > 57 ? 1900 : 2000;
+    final j1 = julian(year1, doy1);
 
-    return utc.difference(epch).inMilliseconds / 60000.0;
+    final epch = toTime(j1);
+
+    return utc.difference(epch).inMicroseconds / 60000000.0;
   }
 }

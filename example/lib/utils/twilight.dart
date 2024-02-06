@@ -76,14 +76,6 @@ double _julian(int date) {
   return (date / 86400000.0) + 2440587.5;
 }
 
-double _gmst(double julianDay) {
-  /* Calculate Greenwich Mean Sidereal Time according to 
-		 http://aa.usno.navy.mil/faq/docs/GAST.php */
-  var d = julianDay - 2451545.0;
-  // Low precision equation is good enough for our purposes.
-  return (18.697374558 + 24.06570982441908 * d) % 24;
-}
-
 class _LambdaRadius {
   _LambdaRadius({required this.lambda, required this.radius});
 
@@ -101,7 +93,7 @@ class _AlphaDelta {
 class Twilight {
   factory Twilight.civil(DateTime time, [double resolution = 0.1]) {
     var julianDay = _julian(time.millisecondsSinceEpoch);
-    var gst = _gmst(julianDay);
+    var gst = time.gsmt;
     var latLng = <LatLng>[];
 
     var sunEclPos = _sunEclipticPosition(julianDay);

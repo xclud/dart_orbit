@@ -1,3 +1,7 @@
+## 0.0.10
+
+* SGP4 bugs fixed.
+
 ## 0.0.9
 
 * Refactor.

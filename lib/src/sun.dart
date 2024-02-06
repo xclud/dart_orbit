@@ -1043,8 +1043,8 @@ LookAngle getSunLookAngle(DateTime utc, LatLng observer, double altitude) {
   _getSunLookAngle(date, spa, observer, timezone, altitude);
 
   return LookAngle(
-    azimuth: spa.Azimuth,
-    elevation: spa.elevation,
+    azimuth: Angle.degree(spa.Azimuth),
+    elevation: Angle.degree(spa.elevation),
     range: spa.R * 149597870.7,
   );
 }

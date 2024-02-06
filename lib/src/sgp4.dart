@@ -18,16 +18,14 @@ class SGP4 {
 
     year += year < 57 ? 2000 : 1900;
 
-    var j = _julian(year, doy);
+    final j = _julian(year, doy);
+    final epoch = j - 2433281.5;
 
-    double epoch = j - 2433281.5;
-
-    var earthRadius = planet.radius;
-    var j2 = planet.j2;
-    var j3 = planet.j3;
-    var j4 = planet.j4;
-
-    var j3oj2 = j3 / j2;
+    final earthRadius = planet.radius;
+    final j2 = planet.j2;
+    final j3 = planet.j3;
+    final j4 = planet.j4;
+    final j3oj2 = j3 / j2;
 
     //  sgp4fix add opsmode
     _operationmode = _OpsMode.i;
@@ -439,7 +437,7 @@ class SGP4 {
   late final double cc4;
 
   /// isimp
-  late final int isimp;
+  late int isimp;
 
   /// cc5
   late final double cc5;
@@ -496,7 +494,7 @@ class SGP4 {
   late final double nodedot;
 
   /// xmcof
-  late final double xmcof;
+  late double xmcof;
 
   /// nodecf
   late final double nodecf;
@@ -511,7 +509,7 @@ class SGP4 {
   late final double ecco;
 
   /// no
-  late final double no;
+  late double no;
 
   /// gsto
   late final double gsto;
@@ -1329,7 +1327,7 @@ class SGP4 {
       x7thm1 = (7.0 * cosisq) - 1.0;
     }
 
-    var mrt = (rl * (1.0 - (1.5 * temp2 * betal * con41))) +
+    final mrt = (rl * (1.0 - (1.5 * temp2 * betal * con41))) +
         (0.5 * temp1 * x1mth2 * cos2u);
 
     // sgp4fix for decaying satellites
@@ -1338,32 +1336,32 @@ class SGP4 {
     }
 
     su -= 0.25 * temp2 * x7thm1 * sin2u;
-    var xnode = nodep + (1.5 * temp2 * cosip * sin2u);
-    var xinc = xincp + (1.5 * temp2 * cosip * sinip * cos2u);
-    var mvt = rdotl - (nm * temp1 * x1mth2 * sin2u / xke);
-    var rvdot =
+    final xnode = nodep + (1.5 * temp2 * cosip * sin2u);
+    final xinc = xincp + (1.5 * temp2 * cosip * sinip * cos2u);
+    final mvt = rdotl - (nm * temp1 * x1mth2 * sin2u / xke);
+    final rvdot =
         rvdotl + (nm * temp1 * ((x1mth2 * cos2u) + (1.5 * con41)) / xke);
 
     // --------------------- orientation vectors -------------------
-    var sinsu = sin(su);
-    var cossu = cos(su);
-    var snod = sin(xnode);
-    var cnod = cos(xnode);
-    var sini = sin(xinc);
-    var cosi = cos(xinc);
-    var xmx = -snod * cosi;
-    var xmy = cnod * cosi;
-    var ux = (xmx * sinsu) + (cnod * cossu);
-    var uy = (xmy * sinsu) + (snod * cossu);
-    var uz = sini * sinsu;
-    var vx = (xmx * cossu) - (cnod * sinsu);
-    var vy = (xmy * cossu) - (snod * sinsu);
-    var vz = sini * cossu;
+    final sinsu = sin(su);
+    final cossu = cos(su);
+    final snod = sin(xnode);
+    final cnod = cos(xnode);
+    final sini = sin(xinc);
+    final cosi = cos(xinc);
+    final xmx = -snod * cosi;
+    final xmy = cnod * cosi;
+    final ux = (xmx * sinsu) + (cnod * cossu);
+    final uy = (xmy * sinsu) + (snod * cossu);
+    final uz = sini * sinsu;
+    final vx = (xmx * cossu) - (cnod * sinsu);
+    final vy = (xmy * cossu) - (snod * sinsu);
+    final vz = sini * cossu;
 
     // --------- position and velocity (in km and km/sec) ----------
-    var r = EarthCenteredInertial(
+    final r = EarthCenteredInertial(
         mrt * ux * earthRadius, mrt * uy * earthRadius, mrt * uz * earthRadius);
-    var v = EarthCenteredInertial(
+    final v = EarthCenteredInertial(
         ((mvt * ux) + (rvdot * vx)) * vkmpersec,
         ((mvt * uy) + (rvdot * vy)) * vkmpersec,
         ((mvt * uz) + (rvdot * vz)) * vkmpersec);
