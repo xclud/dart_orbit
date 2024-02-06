@@ -217,15 +217,20 @@ class _HomePageState extends State<HomePage> {
             ),
           );
 
-          markerWidgets.addAll(pla.map(
-            (op) => Positioned(
+          markerWidgets.addAll(pla.map((op) {
+            final el =
+                (op.lookAngle.elevation.degrees * 100.0).roundToDouble() /
+                    100.0;
+            final az =
+                (op.lookAngle.azimuth.degrees * 100.0).roundToDouble() / 100.0;
+
+            return Positioned(
               left: op.position.dx - sunSize / 2,
               top: op.position.dy - sunSize / 2,
               width: sunSize,
               height: sunSize,
               child: Tooltip(
-                message:
-                    'Look Angle\nElevation: ${op.lookAngle.elevation}\nAzimuth: ${op.lookAngle.azimuth}',
+                message: 'Look Angle\nElevation: $el°\nAzimuth: $az°',
                 child: Transform.rotate(
                   angle: op.lookAngle.azimuth.radians,
                   child: Icon(
@@ -237,8 +242,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-            ),
-          ));
+            );
+          }));
 
           String? mousePosition;
           if (mouse != null) {
