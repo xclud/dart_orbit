@@ -9,17 +9,10 @@ import 'package:orbit/src/julian.dart';
 
 import 'package:orbit/src/dslppc.dart';
 
-part 'src/ecef.dart';
-part 'src/eci.dart';
-part 'src/geodetic.dart';
-
 part 'src/two_line_element.dart';
 part 'src/keplerian_elements.dart';
-part 'src/look_angle.dart';
 part 'src/orbit.dart';
 part 'src/orbital_state.dart';
-part 'src/planet.dart';
 part 'src/sgp4.dart';
-part 'src/topocentric.dart';
 part 'src/celestial.dart';
 part 'src/sun.dart';

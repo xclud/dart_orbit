@@ -1046,7 +1046,6 @@ LookAngle getSunLookAngle(DateTime utc, LatLng observer, double altitude) {
     azimuth: spa.Azimuth,
     elevation: spa.elevation,
     range: spa.R * 149597870.7,
-    rate: 0,
   );
 }
 
