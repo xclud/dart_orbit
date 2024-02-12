@@ -3,7 +3,13 @@ part of '../orbit.dart';
 /// SGP4 Calculator.
 class SGP4 {
   /// The constructor.
-  SGP4(this.keplerianElements, this.planet) {
+  SGP4(this.keplerianElements, this.planet)
+      : periodInMinutes = _calcPeriod(
+          keplerianElements.meanMotion,
+          keplerianElements.eccentricity,
+          keplerianElements.inclination,
+          planet,
+        ) {
     no = keplerianElements.meanMotion / _xpdotp;
     bstar = keplerianElements.drag;
 
@@ -415,281 +421,325 @@ class SGP4 {
     }
   }
 
+  /// Propagate.
+  List<List<OrbitPoint>> propagate(DateTime utc, List<int> orbits) {
+    final p = periodInMinutes;
+    if (p == null) {
+      return [];
+    }
+
+    final period = p * 60.0;
+    const stepCount = 100;
+
+    final stepMins = period / stepCount;
+    final jul = Julian.fromDateTime(utc);
+
+    final epoch = keplerianElements.julianEpoch;
+
+    final ret = <List<OrbitPoint>>[];
+
+    for (int i = 0; i < orbits.length; i++) {
+      final o = orbits[i];
+      final days = jul.value - epoch;
+      final secs = days * 24.0 * 3600.0;
+      final orbitNumber = (secs / period).floor();
+      final currentPeriodStart = (orbitNumber + o) * period;
+
+      final temp = <OrbitPoint>[];
+
+      for (var j = 0; j <= stepCount; j++) {
+        final time = epoch + (currentPeriodStart + (j * stepMins));
+        final state = getPosition(time);
+        final geop = state.r.toGeodetic(wgs84, Angle.radian(time));
+
+        final point = OrbitPoint(time, state, geop);
+        temp.add(point);
+      }
+
+      ret.add(temp);
+    }
+
+    return ret;
+  }
+
   /// Keplerian Elements.
   final KeplerianElements keplerianElements;
+
+  /// Period of the Orbit.
+  final double? periodInMinutes;
 
   /// The planet.
   final Planet planet;
 
   /// _method
-  late final _Method _method;
+  late _Method _method;
 
   /// aycof
-  late final double aycof;
+  late double aycof = 0.0;
 
   /// con41
-  late final double con41;
+  late double con41;
 
   /// cc1
-  late final double cc1;
+  late double cc1;
 
   /// cc4
-  late final double cc4;
+  late double cc4;
 
   /// isimp
   late int isimp;
 
   /// cc5
-  late final double cc5;
+  late double cc5;
 
   /// d2
-  late final double d2;
+  late double d2;
 
   /// d3
-  late final double d3;
+  late double d3;
 
   /// d4
-  late final double d4;
+  late double d4;
 
   /// delmo
-  late final double delmo;
+  late double delmo = 0.0;
 
   /// eta
-  late final double eta;
+  late double eta = 0.0;
 
   /// sinmao
-  late final double sinmao;
+  late double sinmao = 0.0;
 
   /// argpdot
-  late final double argpdot;
+  late double argpdot = 0.0;
 
   /// omgcof
-  late final double omgcof;
+  late double omgcof = 0.0;
 
   /// x1mth2
-  late final double x1mth2;
+  late double x1mth2;
 
   /// xlcof
-  late final double xlcof;
+  late double xlcof = 0.0;
 
   /// x7thm1
-  late final double x7thm1;
+  late double x7thm1;
 
   /// t2cof
-  late final double t2cof;
+  late double t2cof;
 
   /// t3cof
-  late final double t3cof;
+  late double t3cof;
 
   /// t4cof
-  late final double t4cof;
+  late double t4cof;
 
   /// t5cof
-  late final double t5cof;
+  late double t5cof;
 
   /// mdot
-  late final double mdot;
+  late double mdot = 0.0;
 
   /// nodedot
-  late final double nodedot;
+  late double nodedot = 0.0;
 
   /// xmcof
-  late double xmcof;
+  late double xmcof = 0.0;
 
   /// nodecf
-  late final double nodecf;
+  late double nodecf = 0.0;
 
   /// irez
-  late final int irez;
+  late int irez = 0;
 
   /// _operationmode
-  late final _OpsMode _operationmode;
+  late _OpsMode _operationmode;
 
   /// ecco
-  late final double ecco;
+  late double ecco = 0.0;
 
   /// no
-  late double no;
+  late double no = 0.0;
 
   /// gsto
-  late final double gsto;
+  late double gsto = 0.0;
 
   /// d2201
-  late final double d2201;
+  late double d2201 = 0;
 
   /// d2211
-  late final double d2211;
+  late double d2211 = 0;
 
   /// d3210
-  late final double d3210;
+  late double d3210 = 0;
 
   /// d3222
-  late final double d3222;
+  late double d3222 = 0;
 
   /// d4410
-  late final double d4410;
+  late double d4410 = 0;
 
   /// d4422
-  late final double d4422;
+  late double d4422 = 0;
 
   /// d5220
-  late final double d5220;
+  late double d5220 = 0;
 
   /// d5232
-  late final double d5232;
+  late double d5232 = 0;
 
   /// d5421
-  late final double d5421;
+  late double d5421 = 0;
 
   /// d5433
-  late final double d5433;
+  late double d5433 = 0;
 
   /// dedt
-  late final double dedt;
+  late double dedt = 0;
 
   /// del1
-  late final double del1;
+  late double del1 = 0;
 
   /// del2
-  late final double del2;
+  late double del2 = 0;
 
   /// del3
-  late final double del3;
+  late double del3 = 0;
 
   /// didt
-  late final double didt;
+  late double didt = 0.0;
 
   /// dmdt
-  late final double dmdt;
+  late double dmdt = 0.0;
 
   /// dnodt
-  late final double dnodt;
+  late double dnodt = 0.0;
 
   /// domdt
-  late final double domdt;
+  late double domdt = 0.0;
 
   /// e3
-  late final double e3;
+  late double e3;
 
   /// ee2
-  late final double ee2;
+  late double ee2;
 
   /// peo
-  late final double peo;
+  late double peo = 0.0;
 
   /// pgho
-  late final double pgho;
+  late double pgho = 0.0;
 
   /// pho
-  late final double pho;
+  late double pho = 0.0;
 
   /// pinco
-  late final double pinco;
+  late double pinco = 0.0;
 
   /// plo
-  late final double plo;
+  late double plo = 0.0;
 
   /// se2
-  late final double se2;
+  late double se2;
 
   /// se3
-  late final double se3;
+  late double se3;
 
   /// sgh2
-  late final double sgh2;
+  late double sgh2;
 
   /// sgh3
-  late final double sgh3;
+  late double sgh3;
 
   /// sgh4
-  late final double sgh4;
+  late double sgh4;
 
   /// sh2
-  late final double sh2;
+  late double sh2;
 
   /// sh3
-  late final double sh3;
+  late double sh3;
 
   /// si2
-  late final double si2;
+  late double si2;
 
   /// si3
-  late final double si3;
+  late double si3;
 
   /// sl2
-  late final double sl2;
+  late double sl2;
 
   /// sl3
-  late final double sl3;
+  late double sl3;
 
   /// sl4
-  late final double sl4;
+  late double sl4;
 
   /// xfact
-  late final double xfact;
+  late double xfact = 0.0;
 
   /// xgh2
-  late final double xgh2;
+  late double xgh2;
 
   /// xgh3
-  late final double xgh3;
+  late double xgh3;
 
   /// xgh4
-  late final double xgh4;
+  late double xgh4;
 
   /// xh2
-  late final double xh2;
+  late double xh2;
 
   /// xh3
-  late final double xh3;
+  late double xh3;
 
   /// xi2
-  late final double xi2;
+  late double xi2;
 
   /// xi3
-  late final double xi3;
+  late double xi3;
 
   /// xl2
-  late final double xl2;
+  late double xl2;
 
   /// zmol
-  late final double zmol;
+  late double zmol = 0.0;
 
   /// zmos
-  late final double zmos;
+  late double zmos = 0.0;
 
   /// xlamo
-  late final double xlamo;
+  late double xlamo = 0.0;
 
   /// atime
-  late final double atime;
+  late double atime = 0;
 
   /// xli
-  late final double xli;
+  late double xli = 0.0;
 
   /// xni
-  late final double xni;
+  late double xni = 0.0;
 
   /// xl4
-  late final double xl4;
+  late double xl4;
 
   /// bstar
-  late final double bstar;
+  late double bstar = 0.0;
 
   /// argpo
-  late final double argpo;
+  late double argpo = 0.0;
 
   /// inclo
-  late final double inclo;
+  late double inclo = 0.0;
 
   /// mo
-  late final double mo;
+  late double mo = 0.0;
 
   /// nodeo
-  late final double nodeo;
+  late double nodeo = 0.0;
 
   /// xl3
-  late final double xl3;
+  late double xl3;
 
   /* -----------------------------------------------------------------------------
 *
@@ -1512,6 +1562,11 @@ class PropagationException implements Exception {
 
   /// Error message.
   final String message;
+
+  @override
+  String toString() {
+    return message;
+  }
 }
 
 enum _OpsMode {

@@ -13,6 +13,7 @@ part 'src/two_line_element.dart';
 part 'src/keplerian_elements.dart';
 part 'src/orbit.dart';
 part 'src/orbital_state.dart';
+part 'src/orbit_point.dart';
 part 'src/sgp4.dart';
 part 'src/celestial.dart';
 part 'src/sun.dart';

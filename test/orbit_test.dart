@@ -57,9 +57,9 @@ void main() {
     final observer = LatLngAlt(
       Angle.degree(35.764472),
       Angle.degree(50.786492),
-      1185.9,
+      1.1859,
     );
-    var g = DateTime.utc(2024, 2, 6, 20, 54, 45);
+    final g = DateTime.utc(2024, 2, 6, 20, 54, 45);
     final rv = sgp.getPositionByDateTime(g);
     final ecf = rv.r.toEcfByDateTime(g);
     final tp = wgs84.topocentric(observer, ecf);
@@ -71,5 +71,15 @@ void main() {
     //expect(la.azimuth.radians, 5.478036739113396);
     //expect(rv.r.y, 5986.06723066486);
     //expect(rv.r.z, 5041.366013551259);
+  });
+
+  test('Propagate', () {
+    final satellite = TwoLineElement.parse(oscar);
+
+    final time = DateTime.utc(2024, 2, 6, 20, 54, 45);
+    final sgp = SGP4(satellite.keplerianElements, wgs84);
+    final orbits = sgp.propagate(time, [0]);
+
+    print(orbits);
   });
 }

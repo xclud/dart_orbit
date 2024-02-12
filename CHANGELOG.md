@@ -1,3 +1,7 @@
+## 0.0.12
+
+* Satellite Propagation.
+
 ## 0.0.11
 
 * Use `latlng` version `^2.0.0`.

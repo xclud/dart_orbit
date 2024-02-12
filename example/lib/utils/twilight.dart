@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:latlng/latlng.dart';
 
 const double _r2d = 180 / pi;
-const double d2r = pi / 180;
+const double _d2r = pi / 180;
 
-_LambdaRadius _sunEclipticPosition(double julianDay) {
+_SunEclipticPosition _sunEclipticPosition(double julianDay) {
   /* Compute the position of the Sun in ecliptic coordinates at
 			 julianDay.  Following
 			 http://en.wikipedia.org/wiki/Position_of_the_Sun */
@@ -18,10 +18,10 @@ _LambdaRadius _sunEclipticPosition(double julianDay) {
   var g = 357.528 + 0.9856003 * n;
   g %= 360;
   // ecliptic longitude of Sun
-  var lambda = L + 1.915 * sin(g * d2r) + 0.02 * sin(2 * g * d2r);
+  var lambda = L + 1.915 * sin(g * _d2r) + 0.02 * sin(2 * g * _d2r);
   // distance from Sun in AU
-  var radius = 1.00014 - 0.01671 * cos(g * d2r) - 0.0014 * cos(2 * g * d2r);
-  return _LambdaRadius(lambda: lambda, radius: radius);
+  var radius = 1.00014 - 0.01671 * cos(g * _d2r) - 0.0014 * cos(2 * g * _d2r);
+  return _SunEclipticPosition(lambda: lambda, radius: radius);
 }
 
 double _eclipticObliquity(double julianDay) {
@@ -45,8 +45,8 @@ _AlphaDelta _sunEquatorialPosition(double sunEclLng, double eclObliq) {
   /* Compute the Sun's equatorial position from its ecliptic
 		 * position. Inputs are expected in degrees. Outputs are in
 		 * degrees as well. */
-  var alpha = atan(cos(eclObliq * d2r) * tan(sunEclLng * d2r)) * _r2d;
-  var delta = asin(sin(eclObliq * d2r) * sin(sunEclLng * d2r)) * _r2d;
+  var alpha = atan(cos(eclObliq * _d2r) * tan(sunEclLng * _d2r)) * _r2d;
+  var delta = asin(sin(eclObliq * _d2r) * sin(sunEclLng * _d2r)) * _r2d;
 
   var lQuadrant = (sunEclLng / 90.0).floor() * 90;
   var raQuadrant = (alpha / 90.0).floor() * 90;
@@ -55,29 +55,22 @@ _AlphaDelta _sunEquatorialPosition(double sunEclLng, double eclObliq) {
   return _AlphaDelta(alpha: alpha, delta: delta);
 }
 
-double _hourAngle(double lng, _AlphaDelta sunPos, double gst) {
+Angle _hourAngle(Angle lng, _AlphaDelta sunPos, Angle gst) {
   /* Compute the hour angle of the sun for a longitude on
 		 * Earth. Return the hour angle in degrees. */
-  var lst = gst + lng / 15;
-  return lst * 15 - sunPos.alpha;
+  final lst = gst.degrees + lng.degrees / 15;
+  return Angle.degree(lst * 15 - sunPos.alpha);
 }
 
-Angle _latitude(double ha, _AlphaDelta sunPos) {
+double _latitude(Angle ha, _AlphaDelta sunPos) {
   /* For a given hour angle and sun position, compute the
 		 * latitude of the terminator in degrees. */
-  final lat = atan(-cos(ha * d2r) / tan(sunPos.delta * d2r));
-  return Angle.radian(lat);
+  var lat = atan(-cos(ha.radians) / tan(sunPos.delta * _d2r)) * _r2d;
+  return lat;
 }
 
-double _julian(int date) {
-  /* Calculate the present UTC Julian Date. Function is valid after
-	 * the beginning of the UNIX epoch 1970-01-01 and ignores leap
-	 * seconds. */
-  return (date / 86400000.0) + 2440587.5;
-}
-
-class _LambdaRadius {
-  _LambdaRadius({required this.lambda, required this.radius});
+class _SunEclipticPosition {
+  _SunEclipticPosition({required this.lambda, required this.radius});
 
   final double lambda;
   final double radius;
@@ -92,17 +85,18 @@ class _AlphaDelta {
 
 class Twilight {
   factory Twilight.civil(DateTime time, [double resolution = 0.1]) {
-    var julianDay = _julian(time.millisecondsSinceEpoch);
-    var gst = time.gsmt;
+    final julianDay = time.julian;
+
+    final gst = julianDay.gmst;
     var latLng = <LatLng>[];
 
-    var sunEclPos = _sunEclipticPosition(julianDay);
-    var eclObliq = _eclipticObliquity(julianDay);
+    var sunEclPos = _sunEclipticPosition(julianDay.value);
+    var eclObliq = _eclipticObliquity(julianDay.value);
     var sunEqPos = _sunEquatorialPosition(sunEclPos.lambda, eclObliq);
     for (var i = 0; i <= 360 * resolution; i++) {
-      var lng = -180 + i / resolution;
-      var ha = _hourAngle(lng, sunEqPos, gst);
-      latLng.add(LatLng(_latitude(ha, sunEqPos), Angle.degree(lng)));
+      final lng = Angle.degree(-180 + i / resolution);
+      final ha = _hourAngle(lng, sunEqPos, gst);
+      latLng.add(LatLng(Angle.degree(_latitude(ha, sunEqPos)), lng));
     }
 
     return Twilight._(latLng, sunEqPos.delta);

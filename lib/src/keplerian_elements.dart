@@ -17,6 +17,9 @@ class KeplerianElements {
   /// Epoch date.
   final double epoch;
 
+  /// Epoch date in Julian.
+  double get julianEpoch => _calcJulian(epoch);
+
   /// Eccentricity in the range 0 <= e < 1.
   ///
   /// In the Keplerian orbit model, the satellite orbit is an ellipse.
@@ -90,14 +93,59 @@ class KeplerianElements {
 
   /// Calculates minutes past epoch.
   double getMinutesPastEpoch(DateTime utc) {
-    int year1 = (epoch / 1000.0).floor();
-    final doy1 = epoch - (year1 * 1000.0);
+    int year = (epoch / 1000.0).floor();
+    final doy = epoch - (year * 1000.0);
 
-    year1 += year1 > 57 ? 1900 : 2000;
-    final j1 = julian(year1, doy1);
+    year += year > 57 ? 1900 : 2000;
+    final j1 = julian(year, doy);
 
     final epch = toTime(j1);
 
     return utc.difference(epch).inMicroseconds / 60000000.0;
   }
+}
+
+double _calcJulian(double epoch) {
+  int year = (epoch / 1000.0).floor();
+  final doy = epoch - (year * 1000.0);
+
+  year += year > 57 ? 1900 : 2000;
+  final j = julian(year, doy);
+
+  return j;
+}
+
+double? _calcPeriod(
+  double meanMotion,
+  double eccentricity,
+  double inclination,
+  Planet planet,
+) {
+  if (meanMotion == 0) {
+    return null;
+  }
+
+  final radiansPerMinute = meanMotion / _xpdotp;
+  final xkmper = planet.radius;
+  final xke = sqrt(3600.0 * planet.mu / (xkmper * xkmper * xkmper));
+  final ck2 = planet.j2 / 2;
+
+  final a1 = pow(xke / radiansPerMinute, 2.0 / 3.0);
+  final e = eccentricity;
+  final cosI = cos(inclination);
+  final temp =
+      1.5 * ck2 * ((3.0 * (cosI * cosI)) - 1.0) / pow(1.0 - (e * e), 1.5);
+  final delta1 = temp / (a1 * a1);
+  final a0 = a1 *
+      (1.0 -
+          (delta1 *
+              ((1.0 / 3.0) + (delta1 * (1.0 + (134.0 / 81.0 * delta1))))));
+
+  double delta0 = temp / (a0 * a0);
+
+  final meanMotionRec = radiansPerMinute / (1.0 + delta0);
+
+  final mins = _twoPi / meanMotionRec;
+
+  return mins;
 }
