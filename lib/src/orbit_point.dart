@@ -3,10 +3,10 @@ part of '../orbit.dart';
 /// An orbital point in time.
 class OrbitPoint {
   ///
-  OrbitPoint(this.time, this.state, this.location);
+  OrbitPoint(this.minutesSinceEpoch, this.state, this.location);
 
   ///
-  final double time;
+  final double minutesSinceEpoch;
 
   ///
   final OrbitalState state;

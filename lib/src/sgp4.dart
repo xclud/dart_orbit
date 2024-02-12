@@ -423,15 +423,17 @@ class SGP4 {
 
   /// Propagate.
   List<List<OrbitPoint>> propagate(DateTime utc, List<int> orbits) {
-    final p = periodInMinutes;
-    if (p == null) {
+    final periodInMins = periodInMinutes;
+    if (periodInMins == null) {
       return [];
     }
 
-    final period = p * 60.0;
+    utc = utc.toUtc();
+
+    final periodInSecs = periodInMins * 60.0;
     const stepCount = 100;
 
-    final stepMins = period / stepCount;
+    final stepMins = periodInMins / stepCount;
     final jul = Julian.fromDateTime(utc);
 
     final epoch = keplerianElements.julianEpoch;
@@ -442,17 +444,18 @@ class SGP4 {
       final o = orbits[i];
       final days = jul.value - epoch;
       final secs = days * 24.0 * 3600.0;
-      final orbitNumber = (secs / period).floor();
-      final currentPeriodStart = (orbitNumber + o) * period;
+      final orbitNumber = (secs / periodInSecs).floor();
+      final currentPeriodStartMins = (orbitNumber + o) * periodInMins;
 
       final temp = <OrbitPoint>[];
 
       for (var j = 0; j <= stepCount; j++) {
-        final time = epoch + (currentPeriodStart + (j * stepMins));
-        final state = getPosition(time);
-        final geop = state.r.toGeodetic(wgs84, Angle.radian(time));
+        final minutesSinceEpoch = currentPeriodStartMins + (j * stepMins);
+        final state = getPosition(minutesSinceEpoch);
+        final jj = Julian(epoch + minutesSinceEpoch / 60 / 24);
+        final geop = state.r.toGeodetic(wgs84, jj.gmst);
 
-        final point = OrbitPoint(time, state, geop);
+        final point = OrbitPoint(minutesSinceEpoch, state, geop);
         temp.add(point);
       }
 
