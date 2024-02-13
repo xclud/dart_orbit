@@ -3,14 +3,32 @@ part of '../orbit.dart';
 /// An orbital point in time.
 class OrbitPoint {
   ///
-  OrbitPoint(this.minutesSinceEpoch, this.state, this.location);
+  const OrbitPoint(this.time, this.state, this.location);
 
   ///
-  final double minutesSinceEpoch;
+  final Julian time;
 
   ///
   final OrbitalState state;
 
   ///
   final LatLngAlt location;
+}
+
+///
+class PassPoint {
+  ///
+  const PassPoint(this.point, this.ecf, this.topocentric, this.lookAngle);
+
+  ///
+  final OrbitPoint point;
+
+  ///
+  final EarthCenteredEarthFixed ecf;
+
+  ///
+  final Topocentric topocentric;
+
+  ///
+  final LookAngle lookAngle;
 }

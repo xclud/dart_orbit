@@ -422,7 +422,7 @@ class SGP4 {
   }
 
   /// Propagate.
-  List<List<OrbitPoint>> propagate(DateTime utc, List<int> orbits) {
+  List<Orbit> propagate(DateTime utc, List<int> orbits) {
     final periodInMins = periodInMinutes;
     if (periodInMins == null) {
       return [];
@@ -438,7 +438,7 @@ class SGP4 {
 
     final epoch = keplerianElements.julianEpoch;
 
-    final ret = <List<OrbitPoint>>[];
+    final ret = <Orbit>[];
 
     for (int i = 0; i < orbits.length; i++) {
       final o = orbits[i];
@@ -453,13 +453,13 @@ class SGP4 {
         final minutesSinceEpoch = currentPeriodStartMins + (j * stepMins);
         final state = getPosition(minutesSinceEpoch);
         final jj = Julian(epoch + minutesSinceEpoch / 60 / 24);
-        final geop = state.r.toGeodetic(wgs84, jj.gmst);
+        final geop = state.r.toGeodetic(planet, jj.gmst);
 
-        final point = OrbitPoint(minutesSinceEpoch, state, geop);
+        final point = OrbitPoint(jj, state, geop);
         temp.add(point);
       }
 
-      ret.add(temp);
+      ret.add(Orbit(points: temp));
     }
 
     return ret;

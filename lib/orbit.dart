@@ -12,6 +12,7 @@ import 'package:orbit/src/dslppc.dart';
 part 'src/two_line_element.dart';
 part 'src/keplerian_elements.dart';
 part 'src/orbit.dart';
+part 'src/pass.dart';
 part 'src/orbital_state.dart';
 part 'src/orbit_point.dart';
 part 'src/sgp4.dart';
