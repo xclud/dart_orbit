@@ -18,7 +18,13 @@ class OrbitPoint {
 ///
 class PassPoint {
   ///
-  const PassPoint(this.point, this.ecf, this.topocentric, this.lookAngle);
+  const PassPoint._(
+    this.point,
+    this.ecf,
+    this.topocentric,
+    this.lookAngle,
+    this.dopplerFactor,
+  );
 
   ///
   final OrbitPoint point;
@@ -31,4 +37,7 @@ class PassPoint {
 
   ///
   final LookAngle lookAngle;
+
+  /// Doppler factor at this point.
+  final double dopplerFactor;
 }

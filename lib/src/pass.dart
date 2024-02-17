@@ -23,9 +23,12 @@ class Pass {
     for (final orbit in orbits) {
       for (final point in orbit.points) {
         final ecf = point.state.r.toEcf(point.time.gmst);
+
+        final eci = ecf.toEci(point.time.gmst);
+        final doppler = point.state.dopplerFactor(eci);
         final topocentric = planet.topocentric(observer, ecf);
         final la = topocentric.toLookAngle();
-        final passPoint = PassPoint(point, ecf, topocentric, la);
+        final passPoint = PassPoint._(point, ecf, topocentric, la, doppler);
 
         max ??= passPoint;
 
@@ -38,6 +41,7 @@ class Pass {
             ret.add(Pass._(current, max));
 
             current = [];
+            max = null;
           }
 
           continue;

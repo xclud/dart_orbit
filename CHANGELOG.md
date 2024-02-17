@@ -1,7 +1,10 @@
+## 0.0.15
+
+* Doppler factor.
+
 ## 0.0.14
 
 * Propagation and Prediction enhancements.
-
 ## 0.0.13
 
 * Satellite Propagation.
