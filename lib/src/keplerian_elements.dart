@@ -18,7 +18,7 @@ class KeplerianElements {
   final double epoch;
 
   /// Epoch date in Julian.
-  double get julianEpoch => _calcJulian(epoch);
+  Julian get julianEpoch => _calcJulian(epoch);
 
   /// Eccentricity in the range 0 <= e < 1.
   ///
@@ -97,20 +97,20 @@ class KeplerianElements {
     final doy = epoch - (year * 1000.0);
 
     year += year > 57 ? 1900 : 2000;
-    final j1 = julian(year, doy);
+    final j1 = Julian.fromYearDoy(year, doy);
 
-    final epch = toTime(j1);
+    final epch = j1.toDateTime();
 
     return utc.difference(epch).inMicroseconds / 60000000.0;
   }
 }
 
-double _calcJulian(double epoch) {
+Julian _calcJulian(double epoch) {
   int year = (epoch / 1000.0).floor();
   final doy = epoch - (year * 1000.0);
 
   year += year > 57 ? 1900 : 2000;
-  final j = julian(year, doy);
+  final j = Julian.fromYearDoy(year, doy);
 
   return j;
 }

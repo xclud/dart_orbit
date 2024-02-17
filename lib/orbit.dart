@@ -5,7 +5,6 @@ import 'dart:math';
 import 'package:latlng/latlng.dart';
 
 import 'package:orbit/src/deep_space_common.dart';
-import 'package:orbit/src/julian.dart';
 
 import 'package:orbit/src/dslppc.dart';
 

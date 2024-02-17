@@ -442,7 +442,7 @@ class SGP4 {
 
     for (int i = 0; i < orbits.length; i++) {
       final o = orbits[i];
-      final days = jul.value - epoch;
+      final days = jul.value - epoch.value;
       final secs = days * 24.0 * 3600.0;
       final orbitNumber = (secs / periodInSecs).floor();
       final currentPeriodStartMins = (orbitNumber + o) * periodInMins;
@@ -452,7 +452,7 @@ class SGP4 {
       for (var j = 0; j <= stepCount; j++) {
         final minutesSinceEpoch = currentPeriodStartMins + (j * stepMins);
         final state = getPosition(minutesSinceEpoch);
-        final jj = Julian(epoch + minutesSinceEpoch / 60 / 24);
+        final jj = Julian(epoch.value + minutesSinceEpoch / 60 / 24);
         final geop = state.r.toGeodetic(planet, jj.gmst);
 
         final point = OrbitPoint(jj, state, geop);
