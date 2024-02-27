@@ -164,20 +164,29 @@ class PerStationPerSatellite {
 
 const _stations = [
   Station(
-    'Mahdasht',
+    'London',
     Colors.purple,
     LatLngAlt(
-      Angle.degree(35),
-      Angle.degree(0),
+      Angle.degree(51.5287398),
+      Angle.degree(-0.2664035),
       1.1859, // In km.
     ),
   ),
   Station(
-    'Qeshm',
+    'New York',
+    Colors.teal,
+    LatLngAlt(
+      Angle.degree(40.697329),
+      Angle.degree(-74.2914959),
+      0.1859, // In km.
+    ),
+  ),
+  Station(
+    'Tokyo',
     Colors.amber,
     LatLngAlt(
-      Angle.degree(26.6154292),
-      Angle.degree(55.4829691),
+      Angle.degree(35.5085647),
+      Angle.degree(139.110428),
       0.1859, // In km.
     ),
   ),
