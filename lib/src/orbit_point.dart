@@ -3,7 +3,7 @@ part of '../orbit.dart';
 /// An orbital point in time.
 class OrbitPoint {
   ///
-  const OrbitPoint(this.time, this.state, this.location);
+  const OrbitPoint._(this.time, this.state, this.location);
 
   ///
   final Julian time;

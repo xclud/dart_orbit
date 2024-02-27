@@ -2,13 +2,16 @@ part of '../orbit.dart';
 
 /// Satellite pass.
 class Pass {
-  const Pass._(this.points, this.max);
+  const Pass._(this.points, this.max, this.orbit);
 
   ///
   final List<PassPoint> points;
 
   ///
   final PassPoint max;
+
+  ///
+  final int orbit;
 
   /// Predict.
   static List<Pass> predict(
@@ -38,7 +41,7 @@ class Pass {
 
         if (la.elevation.degrees < 0) {
           if (current.isNotEmpty) {
-            ret.add(Pass._(current, max));
+            ret.add(Pass._(current, max, orbit.index));
 
             current = [];
             max = null;
@@ -52,7 +55,7 @@ class Pass {
     }
 
     if (current.isNotEmpty && max != null) {
-      ret.add(Pass._(current, max));
+      ret.add(Pass._(current, max, orbits.last.index));
     }
 
     return ret;

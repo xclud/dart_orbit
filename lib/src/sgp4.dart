@@ -421,33 +421,48 @@ class SGP4 {
     }
   }
 
-  /// Propagate.
-  List<Orbit> propagate(DateTime utc, List<int> orbits) {
+  /// Get the orbit number at the given time.
+  int? getOrbitNumber(DateTime utc) {
     final periodInMins = periodInMinutes;
     if (periodInMins == null) {
-      return [];
+      return null;
     }
 
     utc = utc.toUtc();
-
     final periodInSecs = periodInMins * 60.0;
-    const stepCount = 100;
 
-    final stepMins = periodInMins / stepCount;
     final jul = Julian.fromDateTime(utc);
 
+    final epoch = keplerianElements.julianEpoch;
+    final daysSinceSatEpoch = jul.value - epoch.value;
+    final secsSinceSatEpoch = daysSinceSatEpoch * 24.0 * 3600.0;
+    final orbitNumber = (secsSinceSatEpoch / periodInSecs).floor();
+
+    return orbitNumber;
+  }
+
+  /// Propagate.
+  List<Orbit> propagate(DateTime utc, List<int> orbits) {
+    final periodInMins = periodInMinutes;
+    final orbitNumber = getOrbitNumber(utc);
+    if (periodInMins == null || orbitNumber == null) {
+      return [];
+    }
+
+    const stepCount = 180;
+    final stepMins = periodInMins / stepCount;
     final epoch = keplerianElements.julianEpoch;
 
     final ret = <Orbit>[];
 
     for (int i = 0; i < orbits.length; i++) {
       final o = orbits[i];
-      final days = jul.value - epoch.value;
-      final secs = days * 24.0 * 3600.0;
-      final orbitNumber = (secs / periodInSecs).floor();
       final currentPeriodStartMins = (orbitNumber + o) * periodInMins;
 
       final temp = <OrbitPoint>[];
+
+      int rounds = 0;
+      Angle? lastLongitude;
 
       for (var j = 0; j <= stepCount; j++) {
         final minutesSinceEpoch = currentPeriodStartMins + (j * stepMins);
@@ -455,11 +470,28 @@ class SGP4 {
         final jj = Julian(epoch.value + minutesSinceEpoch / 60 / 24);
         final geop = state.r.toGeodetic(planet, jj.gmst);
 
-        final point = OrbitPoint(jj, state, geop);
+        lastLongitude ??= geop.longitude;
+        final longitudeDiff = geop.longitude.degrees - lastLongitude.degrees;
+
+        if (longitudeDiff > 90) {
+          rounds--;
+        } else if (longitudeDiff < -90) {
+          rounds++;
+        }
+
+        lastLongitude = geop.longitude;
+
+        final geo = LatLngAlt(
+          geop.latitude,
+          Angle.degree(geop.longitude.degrees + 360 * (rounds + o)),
+          geop.altitude,
+        );
+
+        final point = OrbitPoint._(jj, state, geo);
         temp.add(point);
       }
 
-      ret.add(Orbit(points: temp));
+      ret.add(Orbit._(temp, o));
     }
 
     return ret;
