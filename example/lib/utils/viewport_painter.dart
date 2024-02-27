@@ -8,10 +8,12 @@ class ViewportPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..style = PaintingStyle.stroke
-      ..color = Colors.white
-      ..strokeWidth = 1;
+      ..color = Colors.black
+      ..strokeWidth = 2;
 
-    canvas.drawRect(viewport, paint);
+    //canvas.drawRect(viewport, paint);
+    canvas.drawLine(viewport.topLeft, viewport.bottomLeft, paint);
+    canvas.drawLine(viewport.topRight, viewport.bottomRight, paint);
   }
 
   @override

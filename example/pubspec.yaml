@@ -34,6 +34,8 @@ dependencies:
   map: any
   latlng: any
   cached_network_image: any
+  file_picker: any
+  gap: any
   orbit:
     path: ../
 

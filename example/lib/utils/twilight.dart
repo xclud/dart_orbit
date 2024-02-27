@@ -5,7 +5,7 @@ import 'package:latlng/latlng.dart';
 const double _r2d = 180 / pi;
 const double _d2r = pi / 180;
 
-_SunEclipticPosition _sunEclipticPosition(double julianDay) {
+_LambdaRadius _sunEclipticPosition(double julianDay) {
   /* Compute the position of the Sun in ecliptic coordinates at
 			 julianDay.  Following
 			 http://en.wikipedia.org/wiki/Position_of_the_Sun */
@@ -21,7 +21,7 @@ _SunEclipticPosition _sunEclipticPosition(double julianDay) {
   var lambda = L + 1.915 * sin(g * _d2r) + 0.02 * sin(2 * g * _d2r);
   // distance from Sun in AU
   var radius = 1.00014 - 0.01671 * cos(g * _d2r) - 0.0014 * cos(2 * g * _d2r);
-  return _SunEclipticPosition(lambda: lambda, radius: radius);
+  return _LambdaRadius(lambda: lambda, radius: radius);
 }
 
 double _eclipticObliquity(double julianDay) {
@@ -55,22 +55,30 @@ _AlphaDelta _sunEquatorialPosition(double sunEclLng, double eclObliq) {
   return _AlphaDelta(alpha: alpha, delta: delta);
 }
 
-Angle _hourAngle(Angle lng, _AlphaDelta sunPos, Angle gst) {
+double _hourAngle(double lng, _AlphaDelta sunPos, double gst) {
   /* Compute the hour angle of the sun for a longitude on
 		 * Earth. Return the hour angle in degrees. */
-  final lst = gst.degrees + lng.degrees / 15;
-  return Angle.degree(lst * 15 - sunPos.alpha);
+  var lst = gst + lng / 15;
+  return lst * 15 - sunPos.alpha;
 }
 
-double _latitude(Angle ha, _AlphaDelta sunPos) {
+double _latitude(double ha, _AlphaDelta sunPos) {
   /* For a given hour angle and sun position, compute the
 		 * latitude of the terminator in degrees. */
-  var lat = atan(-cos(ha.radians) / tan(sunPos.delta * _d2r)) * _r2d;
+  var lat = atan(-cos(ha * _d2r) / tan(sunPos.delta * _d2r)) * _r2d;
   return lat;
 }
 
-class _SunEclipticPosition {
-  _SunEclipticPosition({required this.lambda, required this.radius});
+double _gmst(double julianDay) {
+  /* Calculate Greenwich Mean Sidereal Time according to 
+		 http://aa.usno.navy.mil/faq/docs/GAST.php */
+  var d = julianDay - 2451545.0;
+  // Low precision equation is good enough for our purposes.
+  return (18.697374558 + 24.06570982441908 * d) % 24;
+}
+
+class _LambdaRadius {
+  _LambdaRadius({required this.lambda, required this.radius});
 
   final double lambda;
   final double radius;
@@ -85,24 +93,24 @@ class _AlphaDelta {
 
 class Twilight {
   factory Twilight.civil(DateTime time, [double resolution = 0.1]) {
-    final julianDay = time.julian;
-
-    final gst = julianDay.gmst;
+    var julianDay = time.julian;
+    var gst = _gmst(julianDay.value);
     var latLng = <LatLng>[];
 
     var sunEclPos = _sunEclipticPosition(julianDay.value);
     var eclObliq = _eclipticObliquity(julianDay.value);
     var sunEqPos = _sunEquatorialPosition(sunEclPos.lambda, eclObliq);
     for (var i = 0; i <= 360 * resolution; i++) {
-      final lng = Angle.degree(-180 + i / resolution);
-      final ha = _hourAngle(lng, sunEqPos, gst);
-      latLng.add(LatLng(Angle.degree(_latitude(ha, sunEqPos)), lng));
+      var lng = -180 + i / resolution;
+      var ha = _hourAngle(lng, sunEqPos, gst);
+      latLng.add(
+          LatLng(Angle.degree(_latitude(ha, sunEqPos)), Angle.degree(lng)));
     }
 
     return Twilight._(latLng, sunEqPos.delta);
   }
 
-  Twilight._(this.polyline, this.delta);
-  final List<LatLng> polyline;
+  Twilight._(this.points, this.delta);
+  final List<LatLng> points;
   final double delta;
 }
